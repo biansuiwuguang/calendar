@@ -60,7 +60,6 @@ function App() {
       <div className="w-full h-full">
         {/* Month/year header with prev/next navigation */}
         <MonthHeader
-  className="text-center"
           month={view.month}
           year={view.year}
           monthLabels={MONTH_KEYS}

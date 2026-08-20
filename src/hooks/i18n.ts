@@ -4,14 +4,14 @@ import zh from '../i18n/zh.json' with { type: 'json' };
 import ja from '../i18n/ja.json' with { type: 'json' };
 import ru from '../i18n/ru.json' with { type: 'json' };
 type Locale = 'en' | 'zh' | 'ja' | 'ru';
-const map: Record<Locale, typeof en> = { en, zh, ja, ru };
+const map: Record<string, Record<string, string>>  = { en, zh, ja, ru };
 const STORAGE_KEY = 'userCustomLanguage';
 
 function getInitialLocale(): Locale {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved && Object.hasOwn(map, saved)) return saved as Locale;
   const detected = navigator.language.slice(0, 2);
-  return Object.hasOwn(map, detected) ? detected : 'en';
+  return Object.hasOwn(map, detected) ? detected as Locale : 'en';
 }
 
 export function useI18n() {
