@@ -36,7 +36,7 @@ export default function LangSwitcher({ setLocale, getLocale }: LangSwitcherProps
   }, [open])
 
   return (
-    <div className="fixed top-4 left-4 z-50">
+    <div className="top-4 left-4 fixed">
       <button
         ref={btnRef}
         onClick={() => setOpen(v => !v)}

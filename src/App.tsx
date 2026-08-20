@@ -3,6 +3,8 @@ import { useI18n } from './hooks/i18n'
 import MonthHeader from './components/MonthHeader'
 import CalendarGrid from './components/CalendarGrid'
 import LangSwitcher from './components/LangSwitcher'
+import LocalStorageTextarea from './components/LocalStorageTextarea'
+import FullscreenTextarea from './components/FullscreenTextarea'
 
 const WEEKDAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const
 const MONTH_KEYS = [
@@ -26,6 +28,7 @@ function App() {
     year: today.getFullYear(),
     month: today.getMonth(),
   })
+  const [selectedDay, setSelectedDay] = useState<number | null>(null)
 
   const daysInMonth = getDaysInMonth(view.year, view.month)
   const firstDow = dayOfWeek(new Date(view.year, view.month, 1))
@@ -41,22 +44,30 @@ function App() {
     else setView({ ...view, month: view.month + 1 })
   }
 
+  const openDay = (day: number) => setSelectedDay(day)
+  const closeDay = () => setSelectedDay(null)
+
+  const dayStorageKey = selectedDay !== null
+    ? `${view.year}_${view.month}_${selectedDay}`
+    : ''
+
   return (
-    <div className="min-w-screen min-h-screen relative flex items-center justify-center bg-white dark:bg-slate-900 transition-colors">
+    <div className="w-full h-full relative flex items-center justify-center bg-white dark:bg-slate-900 transition-colors">
       {/* Language switcher — top-left corner, standalone */}
       <LangSwitcher setLocale={setLocale} getLocale={getLocale} />
 
       {/* Main card */}
-      <div className="w-full max-w-xs sm:max-w-sm md:max-w-none md:w-[420px] p-6">
+      <div className="w-full h-full">
         {/* Month/year header with prev/next navigation */}
         <MonthHeader
+  className="text-center"
           month={view.month}
           year={view.year}
           monthLabels={MONTH_KEYS}
           t={t}
           onPrev={prev}
           onNext={next}
-        />
+          />
 
         {/* Calendar grid with weekday labels and day cells */}
         <CalendarGrid
@@ -67,7 +78,18 @@ function App() {
           weekdayKeys={WEEKDAY_KEYS}
           t={t}
           locale={getLocale()}
+          onDayClick={openDay}
         />
+<LocalStorageTextarea storageKey={`${view.year}_${view.month}`} />
+
+        {/* Fullscreen textarea for the selected day */}
+        {selectedDay !== null && (
+          <FullscreenTextarea
+            storageKey={dayStorageKey}
+            placeholder={`${view.year}-${String(view.month + 1).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`}
+            onClose={closeDay}
+          />
+        )}
       </div>
     </div>
   )

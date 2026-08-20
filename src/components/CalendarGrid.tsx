@@ -6,6 +6,7 @@ interface CalendarGridProps {
   weekdayKeys: readonly string[]
   t: (key: string) => string
   locale: 'en' | 'zh' | 'ja' | 'ru'
+  onDayClick?: (day: number) => void
 }
 
 export default function CalendarGrid({
@@ -16,6 +17,7 @@ export default function CalendarGrid({
   weekdayKeys,
   t,
   locale,
+  onDayClick,
 }: CalendarGridProps) {
   const isToday = (day: number) =>
     day === today.getDate() &&
@@ -62,6 +64,7 @@ export default function CalendarGrid({
           return (
             <div
               key={day}
+              onClick={() => onDayClick?.(day)}
               className={[
                 'aspect-square flex items-center justify-center text-sm rounded-lg cursor-pointer transition-colors',
                 todayFlag
